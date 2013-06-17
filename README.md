@@ -1,6 +1,6 @@
 # ZenfolioAPI
 
-TODO: Write a gem description
+This is a basic implementation of the Zenfolio API. More features like uploading photos will come later.
 
 ## Installation
 
