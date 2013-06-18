@@ -1,6 +1,6 @@
 module ZenfolioAPI
 	class Model
-		class Image < ZenfolioAPI::Record
+		class AccessDescriptor < ZenfolioAPI::Record
 			attr_reader :realm_id
 			attr_reader :access_type
 			attr_reader :access_mask

@@ -7,6 +7,10 @@ require "ZenfolioAPI/model/gallery"
 require "ZenfolioAPI/model/image"
 require "ZenfolioAPI/model/exif_tag"
 require "ZenfolioAPI/model/access_descriptor"
+require "ZenfolioAPI/model/group"
+require "ZenfolioAPI/model/group_element"
+require "ZenfolioAPI/model/message"
+require "ZenfolioAPI/model/user"
 
 module ZenfolioAPI
 

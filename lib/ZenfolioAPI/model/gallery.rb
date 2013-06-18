@@ -27,6 +27,8 @@ module ZenfolioAPI
 			attr_reader :photo_list_cn
 			attr_reader :group_index
 			attr_reader :hide_branding
+
+			attr_accessor :photos
 		end
 	end
 end
