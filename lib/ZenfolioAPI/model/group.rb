@@ -5,6 +5,7 @@ module ZenfolioAPI
 			attr_reader :created_on
 			attr_reader :modified_on
 			attr_reader :page_url
+			attr_reader :title
 			attr_reader :tile_photo
 			attr_reader :mailbox_id
 			attr_reader :immediate_children_count

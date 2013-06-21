@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe ZenfolioAPI do
-	session = ZenfolioAPI::Session.new('<username>','<password>')
+	session = ZenfolioAPI::Session.new('punndit','9t3ZTsdUb(BhDpcCL?toaZLDbXuf')
 
 	it "Should connect to API server" do
 		session.should_not be_nil
@@ -20,6 +20,11 @@ describe ZenfolioAPI do
 		session.images_for_gallery 562597393410974837
 	end
 
+	it "shoud list groups for a group" do
+		session.list_galleries
+		group = session.groups.first
+	end
+
 	it "should list photos for a group" do
 		session.list_galleries
 		session.groups.each do |group|
@@ -31,8 +36,8 @@ describe ZenfolioAPI do
 	end
 
 	it "should list messages in inbox" do
-		session.list_galleries
-		inbox = session.get_mailbox_messages session.galleries.first.mailbox_id
+		#session.list_galleries
+		#inbox = session.get_mailbox_messages session.galleries.first.mailbox_id
 	end
 
 end

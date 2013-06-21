@@ -45,18 +45,27 @@ module ZenfolioAPI
 				elsif value['$type'] == "Group"	
 					elements = []
 					value['Elements'].each do |element|
-						elements << ZenfolioAPI::Model::Gallery.new(:id => element['Id'], :type => element['$type'], :caption => element['Caption'], 
-							:created_on => element['CreatedOn']['Value'], :modified_on => element['ModifiedOn']['Value'], :photo_count => element['PhotoCount'],
-							:image_count => element['ImageCount'], :video_count => element['VideoCount'], :photo_bytes => element['PhotoBytes'], :views => element['Views'],
-							:featured_index => element['FeaturedIndex'], :is_random_title_photo => element['IsRandomTitlePhoto'], :upload_url => element['UploadUrl'],
-							:video_upload_url => element['VideoUploadUrl'], :page_url => element['PageUrl'], :mailbox_id => element['MailboxId'], :text_cn => element['TextCn'], 
-							:photo_list_cn => element['PhotoListCn'], :group_index => element['GroupIndex'], :title => element['Title'], :owner => element['Owner'])
+						if element['$type'] == "PhotoSet"
+							elements << ZenfolioAPI::Model::Gallery.new(:id => element['Id'], :type => element['$type'], :caption => element['Caption'], 
+								:created_on => element['CreatedOn']['Value'], :modified_on => element['ModifiedOn']['Value'], :photo_count => element['PhotoCount'],
+								:image_count => element['ImageCount'], :video_count => element['VideoCount'], :photo_bytes => element['PhotoBytes'], :views => element['Views'],
+								:featured_index => element['FeaturedIndex'], :is_random_title_photo => element['IsRandomTitlePhoto'], :upload_url => element['UploadUrl'],
+								:video_upload_url => element['VideoUploadUrl'], :page_url => element['PageUrl'], :mailbox_id => element['MailboxId'], :text_cn => element['TextCn'], 
+								:photo_list_cn => element['PhotoListCn'], :group_index => element['GroupIndex'], :title => element['Title'], :owner => element['Owner'])
+						else
+							group_elements = load_group element['Id']
+							elements << ZenfolioAPI::Model::Group.new(:id => element['Id'], :created_on => element['CreatedOn']['Value'], :modified_on => element['ModifiedOn']['Value'], 
+								:page_url => element['PageUrl'], :mailbox_id => element['MailboxId'], :immediate_children_count => value['ImmediateChildrenCount'], :text_cn => element['TextCn'], 
+								:caption => element['Caption'], :collection_count => value['CollectionCount'], :sub_group_count => value['SubGroupCount'], :gallery_count => value['GalleryCount'],
+								:featured_index => element['FeaturedIndex'], :is_random_title_photo => element['IsRandomTitlePhoto'], :upload_url => element['UploadUrl'],
+								:photo_count => value['PhotoCount'], :parent_groups => value['ParentGroups'], :title => value['Title'])
+						end
 					end
 
 					@groups << ZenfolioAPI::Model::Group.new(:id => value['Id'], :created_on => value['CreatedOn']['Value'], :modified_on => value['ModifiedOn']['Value'], 
 						:page_url => value['PageUrl'], :mailbox_id => value['MailboxId'], :immediate_children_count => value['ImmediateChildrenCount'], :text_cn => value['TextCn'],
 						:caption => value['Caption'], :collection_count => value['CollectionCount'], :sub_group_count => value['SubGroupCount'], :gallery_count => value['GalleryCount'],
-						:photo_count => value['PhotoCount'], :parent_groups => value['ParentGroups'], :elements => elements)
+						:photo_count => value['PhotoCount'], :parent_groups => value['ParentGroups'], :elements => elements, :title => value['Title'])
 				end
 			end
 
@@ -101,6 +110,35 @@ module ZenfolioAPI
 			raise ZenfolioAPI::ZenfolioAPISessionError, @response['error']['message'] if @response['result'].nil? && @response['error'].length > 0
 
 			
+		end
+
+		# The LoadGroup method obtains a snapshot of the specified photoset group.
+		#
+		# @author David Slone
+		# @param [Integer] group_id 64-bit identifier of the photoset group to load
+		# @param [String] info_level Specifies which Group snapshot fields to return. This parameter is new in API version 1.4.
+		# @param [String] include_children Indicates whether to return immediate group children. This parameter is new in API version 1.4.
+		def load_group group_id, info_level = "Full", include_children = "true"
+			@response = api_request 'LoadGroup', [group_id, info_level, include_children]
+
+			elements = []
+			@response['result']['Elements'].each do |element|
+				if element['$type'] == "PhotoSet"
+					elements << ZenfolioAPI::Model::Gallery.new(:id => element['Id'], :type => element['$type'], :caption => element['Caption'], 
+						:created_on => element['CreatedOn']['Value'], :modified_on => element['ModifiedOn']['Value'], :photo_count => element['PhotoCount'],
+						:image_count => element['ImageCount'], :video_count => element['VideoCount'], :photo_bytes => element['PhotoBytes'], :views => element['Views'],
+						:featured_index => element['FeaturedIndex'], :is_random_title_photo => element['IsRandomTitlePhoto'], :upload_url => element['UploadUrl'],
+						:video_upload_url => element['VideoUploadUrl'], :page_url => element['PageUrl'], :mailbox_id => element['MailboxId'], :text_cn => element['TextCn'], 
+						:photo_list_cn => element['PhotoListCn'], :group_index => element['GroupIndex'], :title => element['Title'], :owner => element['Owner'])
+				else
+					group_elements = load_group element['Id']
+					elements << ZenfolioAPI::Model::Group.new(:id => element['Id'], :created_on => element['CreatedOn']['Value'], :modified_on => element['ModifiedOn']['Value'], 
+						:page_url => element['PageUrl'], :mailbox_id => element['MailboxId'], :immediate_children_count => value['ImmediateChildrenCount'], :text_cn => element['TextCn'], 
+						:caption => element['Caption'], :collection_count => value['CollectionCount'], :sub_group_count => value['SubGroupCount'], :gallery_count => value['GalleryCount'],
+						:featured_index => element['FeaturedIndex'], :is_random_title_photo => element['IsRandomTitlePhoto'], :upload_url => element['UploadUrl'],
+						:photo_count => value['PhotoCount'], :parent_groups => value['ParentGroups'], :title => value['Title'])
+				end
+			end
 		end
 	end
 end
