@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe ZenfolioAPI do
-	session = ZenfolioAPI::Session.new('punndit','9t3ZTsdUb(BhDpcCL?toaZLDbXuf')
+	session = ZenfolioAPI::Session.new('<username>','<password>')
 
 	it "Should connect to API server" do
 		session.should_not be_nil
