@@ -133,10 +133,10 @@ module ZenfolioAPI
 				else
 					group_elements = load_group element['Id']
 					elements << ZenfolioAPI::Model::Group.new(:id => element['Id'], :created_on => element['CreatedOn']['Value'], :modified_on => element['ModifiedOn']['Value'], 
-						:page_url => element['PageUrl'], :mailbox_id => element['MailboxId'], :immediate_children_count => value['ImmediateChildrenCount'], :text_cn => element['TextCn'], 
-						:caption => element['Caption'], :collection_count => value['CollectionCount'], :sub_group_count => value['SubGroupCount'], :gallery_count => value['GalleryCount'],
+						:page_url => element['PageUrl'], :mailbox_id => element['MailboxId'], :immediate_children_count => element['ImmediateChildrenCount'], :text_cn => element['TextCn'], 
+						:caption => element['Caption'], :collection_count => element['CollectionCount'], :sub_group_count => element['SubGroupCount'], :gallery_count => element['GalleryCount'],
 						:featured_index => element['FeaturedIndex'], :is_random_title_photo => element['IsRandomTitlePhoto'], :upload_url => element['UploadUrl'],
-						:photo_count => value['PhotoCount'], :parent_groups => value['ParentGroups'], :title => value['Title'])
+						:photo_count => element['PhotoCount'], :parent_groups => element['ParentGroups'], :title => element['Title'])
 				end
 			end
 		end
