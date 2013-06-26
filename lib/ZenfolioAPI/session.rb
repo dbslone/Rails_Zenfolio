@@ -155,14 +155,12 @@ module ZenfolioAPI
 			@response = api_request 'LoadPhotoSet', [gallery_id, info_level, include_photos]
 			raise ZenfolioAPI::ZenfolioAPISessionError, @response['error']['message'] if @response['result'].nil? && @response['error'].length > 0
 
-			@response['result']
-
-			photo_set = ZenfolioAPI::Model::Gallery.new(:id => value['Id'], :type => value['$type'], :caption => value['Caption'], 
-				:created_on => value['CreatedOn']['Value'], :modified_on => value['ModifiedOn']['Value'], :photo_count => value['PhotoCount'],
-				:image_count => value['ImageCount'], :video_count => value['VideoCount'], :photo_bytes => value['PhotoBytes'], :views => value['Views'],
-				:featured_index => value['FeaturedIndex'], :is_random_title_photo => value['IsRandomTitlePhoto'], :upload_url => value['UploadUrl'],
-				:video_upload_url => value['VideoUploadUrl'], :page_url => value['PageUrl'], :mailbox_id => value['MailboxId'], :text_cn => value['TextCn'], 
-				:photo_list_cn => value['PhotoListCn'], :group_index => value['GroupIndex'], :title => value['Title'], :owner => value['Owner'])
+			photo_set = ZenfolioAPI::Model::Gallery.new(:id => @response['result']['Id'], :type => @response['result']['$type'], :caption => @response['result']['Caption'], 
+				:created_on => @response['result']['CreatedOn']['Value'], :modified_on => @response['result']['ModifiedOn']['Value'], :photo_count => @response['result']['PhotoCount'],
+				:image_count => @response['result']['ImageCount'], :video_count => @response['result']['VideoCount'], :photo_bytes => @response['result']['PhotoBytes'], :views => @response['result']['Views'],
+				:featured_index => @response['result']['FeaturedIndex'], :is_random_title_photo => @response['result']['IsRandomTitlePhoto'], :upload_url => @response['result']['UploadUrl'],
+				:video_upload_url => @response['result']['VideoUploadUrl'], :page_url => @response['result']['PageUrl'], :mailbox_id => @response['result']['MailboxId'], :text_cn => @response['result']['TextCn'], 
+				:photo_list_cn => @response['result']['PhotoListCn'], :group_index => @response['result']['GroupIndex'], :title => @response['result']['Title'], :owner => @response['result']['Owner'])
 
 			photo_set
 		end
