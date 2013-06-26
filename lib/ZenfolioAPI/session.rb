@@ -155,14 +155,16 @@ module ZenfolioAPI
 			@response = api_request 'LoadPhotoSet', [gallery_id, info_level, include_photos]
 			raise ZenfolioAPI::ZenfolioAPISessionError, @response['error']['message'] if @response['result'].nil? && @response['error'].length > 0
 
-			gallery = ZenfolioAPI::Model::Gallery.new(:id => value['Id'], :type => value['$type'], :caption => value['Caption'], 
-						:created_on => value['CreatedOn']['Value'], :modified_on => value['ModifiedOn']['Value'], :photo_count => value['PhotoCount'],
-						:image_count => value['ImageCount'], :video_count => value['VideoCount'], :photo_bytes => value['PhotoBytes'], :views => value['Views'],
-						:featured_index => value['FeaturedIndex'], :is_random_title_photo => value['IsRandomTitlePhoto'], :upload_url => value['UploadUrl'],
-						:video_upload_url => value['VideoUploadUrl'], :page_url => value['PageUrl'], :mailbox_id => value['MailboxId'], :text_cn => value['TextCn'], 
-						:photo_list_cn => value['PhotoListCn'], :group_index => value['GroupIndex'], :title => value['Title'], :owner => value['Owner'])
+			@response['result']
 
-			gallery
+			photo_set = ZenfolioAPI::Model::Gallery.new(:id => value['Id'], :type => value['$type'], :caption => value['Caption'], 
+				:created_on => value['CreatedOn']['Value'], :modified_on => value['ModifiedOn']['Value'], :photo_count => value['PhotoCount'],
+				:image_count => value['ImageCount'], :video_count => value['VideoCount'], :photo_bytes => value['PhotoBytes'], :views => value['Views'],
+				:featured_index => value['FeaturedIndex'], :is_random_title_photo => value['IsRandomTitlePhoto'], :upload_url => value['UploadUrl'],
+				:video_upload_url => value['VideoUploadUrl'], :page_url => value['PageUrl'], :mailbox_id => value['MailboxId'], :text_cn => value['TextCn'], 
+				:photo_list_cn => value['PhotoListCn'], :group_index => value['GroupIndex'], :title => value['Title'], :owner => value['Owner'])
+
+			photo_set
 		end
 	end
 end

@@ -40,4 +40,8 @@ describe ZenfolioAPI do
 		#inbox = session.get_mailbox_messages session.galleries.first.mailbox_id
 	end
 
+	it "should load photo set" do
+		session.load_photo_set 562597392944883636
+	end
+
 end
