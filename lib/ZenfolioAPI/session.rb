@@ -118,8 +118,10 @@ module ZenfolioAPI
 		# @param [Integer] group_id 64-bit identifier of the photoset group to load
 		# @param [String] info_level Specifies which Group snapshot fields to return. This parameter is new in API version 1.4.
 		# @param [String] include_children Indicates whether to return immediate group children. This parameter is new in API version 1.4.
+		# @return [Array] Returns an array of elements from the group. Elements can be Galleries or Groups.
 		def load_group group_id, info_level = "Full", include_children = "true"
 			@response = api_request 'LoadGroup', [group_id, info_level, include_children]
+			raise ZenfolioAPI::ZenfolioAPISessionError, @response['error']['message'] if @response['result'].nil? && @response['error'].length > 0
 
 			elements = []
 			@response['result']['Elements'].each do |element|
@@ -139,6 +141,8 @@ module ZenfolioAPI
 						:photo_count => element['PhotoCount'], :parent_groups => element['ParentGroups'], :title => element['Title'])
 				end
 			end
+
+			elements
 		end
 	end
 end
