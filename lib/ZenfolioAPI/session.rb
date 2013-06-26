@@ -53,7 +53,7 @@ module ZenfolioAPI
 								:video_upload_url => element['VideoUploadUrl'], :page_url => element['PageUrl'], :mailbox_id => element['MailboxId'], :text_cn => element['TextCn'], 
 								:photo_list_cn => element['PhotoListCn'], :group_index => element['GroupIndex'], :title => element['Title'], :owner => element['Owner'])
 						else
-							group_elements = load_group element['Id']
+							#group_elements = load_group element['Id']
 							elements << ZenfolioAPI::Model::Group.new(:id => element['Id'], :created_on => element['CreatedOn']['Value'], :modified_on => element['ModifiedOn']['Value'], 
 								:page_url => element['PageUrl'], :mailbox_id => element['MailboxId'], :immediate_children_count => value['ImmediateChildrenCount'], :text_cn => element['TextCn'], 
 								:caption => element['Caption'], :collection_count => value['CollectionCount'], :sub_group_count => value['SubGroupCount'], :gallery_count => value['GalleryCount'],
@@ -133,7 +133,7 @@ module ZenfolioAPI
 						:video_upload_url => element['VideoUploadUrl'], :page_url => element['PageUrl'], :mailbox_id => element['MailboxId'], :text_cn => element['TextCn'], 
 						:photo_list_cn => element['PhotoListCn'], :group_index => element['GroupIndex'], :title => element['Title'], :owner => element['Owner'])
 				else
-					group_elements = load_group element['Id']
+					#group_elements = load_group element['Id']
 					elements << ZenfolioAPI::Model::Group.new(:id => element['Id'], :created_on => element['CreatedOn']['Value'], :modified_on => element['ModifiedOn']['Value'], 
 						:page_url => element['PageUrl'], :mailbox_id => element['MailboxId'], :immediate_children_count => element['ImmediateChildrenCount'], :text_cn => element['TextCn'], 
 						:caption => element['Caption'], :collection_count => element['CollectionCount'], :sub_group_count => element['SubGroupCount'], :gallery_count => element['GalleryCount'],
@@ -142,7 +142,14 @@ module ZenfolioAPI
 				end
 			end
 
-			elements
+			@group = ZenfolioAPI::Model::Group.new(:id => @response['result']['Id'], :created_on => @response['result']['CreatedOn']['Value'], :modified_on => @response['result']['ModifiedOn']['Value'], 
+				:page_url => @response['result']['PageUrl'], :mailbox_id => @response['result']['MailboxId'], :immediate_children_count => @response['result']['ImmediateChildrenCount'], 
+				:text_cn => @response['result']['TextCn'], :caption => @response['result']['Caption'], :collection_count => @response['result']['CollectionCount'], 
+				:sub_group_count => @response['result']['SubGroupCount'], :gallery_count => @response['result']['GalleryCount'], :featured_index => @response['result']['FeaturedIndex'], 
+				:is_random_title_photo => @response['result']['IsRandomTitlePhoto'], :upload_url => @response['result']['UploadUrl'], :photo_count => @response['result']['PhotoCount'], 
+				:parent_groups => @response['result']['ParentGroups'], :title => @response['result']['Title'], :elements => elements)
+
+			@group
 		end
 
 		# The LoadPhotoSet method obtains a snapshot of the specified photoset (gallery or collection).

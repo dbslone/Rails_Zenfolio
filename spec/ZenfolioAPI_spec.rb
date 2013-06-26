@@ -17,12 +17,18 @@ describe ZenfolioAPI do
 	end
 
 	it "should list photos for a gallery" do
-		session.images_for_gallery 562597393410974837
+		photos = session.images_for_gallery 562597392871954814
+	end
+
+	it "should load a group" do
+		group = session.load_group 562597392652020926
+		group.should_not be_nil
 	end
 
 	it "shoud list groups for a group" do
 		session.list_galleries
 		group = session.groups.first
+		#group.should_no be_nil
 	end
 
 	it "should list photos for a group" do
@@ -41,7 +47,8 @@ describe ZenfolioAPI do
 	end
 
 	it "should load photo set" do
-		session.load_photo_set 562597392944883636
+		photo_set = session.load_photo_set 562597392944883636
+		photo_set.should_not be_nil
 	end
 
 end
