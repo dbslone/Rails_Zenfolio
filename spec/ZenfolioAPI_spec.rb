@@ -9,6 +9,8 @@ describe ZenfolioAPI do
 
 	it "should list galleries for user" do
 		session.list_galleries
+		session.groups.each do |g|
+		end
 	end
 
 	it "should raise exception for incorrect gallery/collection id" do
@@ -18,6 +20,15 @@ describe ZenfolioAPI do
 
 	it "should list photos for a gallery" do
 		photos = session.images_for_gallery 562597392871954814
+	end
+
+	it "should raise error if photo is not found" do
+		expect { session.load_photo 0 }.to raise_error
+	end
+
+	it "should load specific photo" do
+		photo = session.load_photo 562597394281328477
+		photo.should_not be_nil
 	end
 
 	it "should load a group" do

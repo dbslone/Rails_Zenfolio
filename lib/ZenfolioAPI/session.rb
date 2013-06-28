@@ -9,6 +9,8 @@ module ZenfolioAPI
 		# Create the Zenfolio Session
 		#
 		# @author David Slone
+		# @param [String] username
+		# @param [String] password
 		def initialize username, password
 			@username = username
 			@password = password
@@ -25,6 +27,21 @@ module ZenfolioAPI
 		def api_request method, params
 			connection = ZenfolioAPI::HTTP.new()
 			@response = connection.POST(method, params, @auth.token)
+		end
+
+		# The CollectionAddPhoto method adds a photo reference to the specified collection.
+		#
+		# @author David Slone
+		# @param [Integer] collection_id 64-bit identifier of the collection to modify
+		# @param [Integer] photo_id 64-bit identifier of the photo to add
+		def collection_add_photo collection_id, photo_id
+			raise ZenfolioAPI::ZenfolioAPISessionError, "Missing collection_id parameter" if collection_id.nil? || collection_id.to_i == 0
+			raise ZenfolioAPI::ZenfolioAPISessionError, "Missing photo_id parameter" if photo_id.nil? || photo_id.to_i == 0
+
+			@response = api_request 'CollectionAddPhoto', [collection_id, photo_id]
+			raise ZenfolioAPI::ZenfolioAPISessionError, @response['error']['message'] if @response['result'].nil? && @response['error'].length > 0
+
+			# TODO: Finish implementing method
 		end
 
 		# The LoadGroupHierarchy method obtains a snapshot of the entire photoset group hierarchy of the specified user.
@@ -170,6 +187,33 @@ module ZenfolioAPI
 				:photo_list_cn => @response['result']['PhotoListCn'], :group_index => @response['result']['GroupIndex'], :title => @response['result']['Title'], :owner => @response['result']['Owner'])
 
 			photo_set
+		end
+
+		# The LoadPhoto method obtains a snapshot of the specified photo.
+		#
+		# @author David Slone
+		# @param [Integer] photo_id 64-bit identifier of the photo to load.
+		# @param [String] info_level Specifies which Photo snapshot fields to return. This parameter is new in API version 1.4.
+		def load_photo photo_id, info_level = "Full"
+			@response = api_request 'LoadPhoto', [photo_id, info_level]
+			raise ZenfolioAPI::ZenfolioAPISessionError, @response['error']['message'] if @response['result'].nil? && @response['error'].length > 0
+
+			value = @response['result']
+
+			access_descriptor = ZenfolioAPI::Model::AccessDescriptor.new(:realm_id => value['AccessDescriptor']['RealmId'], 
+				:access_type => value['AccessDescriptor']['AccessType'], :is_derived => value['AccessDescriptor']['IsDerived'], 
+				:access_mask => value['AccessDescriptor']['AccessMask'], :password_hint => value['AccessDescriptor']['PasswordHint'], 
+				:src_password_hint => value['AccessDescriptor']['SrcPasswordHint'])
+
+			@photo = ZenfolioAPI::Model::Image.new(:id => value['Id'], :width => value['Width'], :height => value['Height'], :sequence => value['Sequence'], 
+				:access_descriptor => access_descriptor, :owner => value['Owner'], :title => value['Title'], :mime_type => value['MimeType'], 
+				:size => value['Size'], :gallery => value['Gallery'], :original_url => value['OriginalUrl'], :url_core => value['UrlCore'], 
+				:url_host => value['UrlHost'], :url_token => value['UrlToken'], :page_url => value['PageUrl'], :mailbox_id => value['MailboxId'], 
+				:text_cn => value['TextCn'], :flags => value['Flags'], :is_video => value['IsVideo'], :duration => value['Duration'], :caption => value['Caption'], 
+				:file_name => value['FileName'], :uploaded_on => value['UploadedOn']['Value'], :taken_on => value['TakenOn']['Value'], :keywords => value['keywords'], 
+				:categories => value['Categories'], :copyright => value['Copyright'], :rotation => value['Rotation'], :exif_tags => value['ExifTags'], :short_exif => value['ShortExif'])
+
+			@photo
 		end
 	end
 end
