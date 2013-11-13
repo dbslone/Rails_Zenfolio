@@ -5,6 +5,7 @@ module ZenfolioAPI
 		attr_accessor :galleries
 		attr_accessor :photos
 		attr_accessor :groups
+		attr_accessor :username
 
 		# Create the Zenfolio Session
 		#
@@ -16,6 +17,9 @@ module ZenfolioAPI
 			@password = password
 			@auth = ZenfolioAPI::Authentication.new(username, password)
 
+			@response = load_private_profile
+			@username = @response['result']['LoginName'] if @response['result']['LoginName'] != @username
+
 			@galleries = []
 			@photos = []
 			@groups = []
@@ -24,9 +28,16 @@ module ZenfolioAPI
 		# Performs the API request to the Zenfolio server
 		#
 		# @author David Slone
-		def api_request method, params
+		def api_request method, params = nil
 			connection = ZenfolioAPI::HTTP.new()
 			@response = connection.POST(method, params, @auth.token)
+		end
+
+		#
+		#
+		# @author David Slone
+		def load_private_profile
+			api_request 'LoadPrivateProfile'
 		end
 
 		# The CollectionAddPhoto method adds a photo reference to the specified collection.

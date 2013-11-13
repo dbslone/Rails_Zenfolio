@@ -3,19 +3,22 @@ require 'spec_helper'
 describe ZenfolioAPI do
 	session = ZenfolioAPI::Session.new(ENV['ZENFOLIO_USERNAME'],ENV['ZENFOLIO_PASSWORD'])
 
+	it "should find username for authenticated user" do
+		email_session = ZenfolioAPI::Session.new(ENV['ZENFOLIO_EMAIL'], ENV['ZENFOLIO_PASSWORD'])
+		email_session.username.should eq(ENV['ZENFOLIO_USERNAME'])
+	end
+
 	it "Should connect to API server" do
 		session.should_not be_nil
 	end
 
 	it "should list galleries for user" do
 		session.list_galleries
-		session.groups.each do |g|
-		end
+		session.groups.should_not be_nil
 	end
 
 	it "should raise exception for incorrect gallery/collection id" do
 		expect { session.images_for_gallery 5 }.to raise_error
-
 	end
 
 	it "should list photos for a gallery" do
@@ -27,7 +30,7 @@ describe ZenfolioAPI do
 	end
 
 	it "should load specific photo" do
-		photo = session.load_photo 562597394281328477
+		photo = session.load_photo 1710182934435540554
 		photo.should_not be_nil
 	end
 
@@ -39,16 +42,18 @@ describe ZenfolioAPI do
 	it "shoud list groups for a group" do
 		session.list_galleries
 		group = session.groups.first
-		#group.should_no be_nil
+		group.should_not be_nil
 	end
 
 	it "should list photos for a group" do
 		session.list_galleries
 		session.groups.each do |group|
-			group.elements.each do |element|
-				session.images_for_gallery element.id
-				session.photos.should_not be_nil
-			end
+			group.elements.should_not be_nil
+			#group.elements.each do |element|
+			#	puts "element: #{element.inspect}\n\n"
+			#	session.images_for_gallery element.id
+			#	session.photos.should_not be_nil
+			#end
 		end
 	end
 

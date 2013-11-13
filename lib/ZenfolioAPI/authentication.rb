@@ -20,6 +20,5 @@ module ZenfolioAPI
 
 			@token = @response['result']
 		end
-
 	end
 end
